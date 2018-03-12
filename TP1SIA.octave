@@ -1,18 +1,19 @@
 # OR
 
 rand('state',sum(100*clock)); # seed random state
-input = [0 0; 1 0; 0 1; 1 1];
-numIn = 4;
-desired_out = [0;1;1;1]; # [0;0;0;1] for AND
+#input = [0 0; 1 0; 0 1; 1 1];
+input = [0 0 0; 0 0 1; 0 1 0; 0 1 1; 1 0 0; 1 0 1; 1 1 0; 1 1 1]
+numIn = 8;
+desired_out = [0;1;1;1;1;1;1;1]; # [0;0;0;1] for AND
 bias = -1;
 coeff = rand(); # random learing rate
-weights = rand(3,1); # random initial weights [0.43, 0.234, 0.12]
+weights = rand(4,1); # random initial weights [0.43, 0.234, 0.12]
 out = zeros(4,1); # initialize output array
 iterations = 1000;
 
 for i = 1:iterations
      for j = 1:numIn
-          h = bias*weights(1)+input(j,1)*weights(2)+input(j,2)*weights(3);
+          h = bias*weights(1)+input(j,1)*weights(2)+input(j,2)*weights(3)+input(j,3)*weights(4);
           out(j) = 1/(1+exp(-h));
 
           # Learning algorithm
@@ -20,8 +21,8 @@ for i = 1:iterations
           weights(1) = weights(1)+bias*delta;
           weights(2) = weights(2)+input(j,1)*delta;
           weights(3) = weights(3)+input(j,2)*delta;
+          weights(4) = weights(3)+input(j,3)*delta;
      end
 end
 
 out
-#AND
