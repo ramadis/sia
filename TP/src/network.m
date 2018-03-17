@@ -16,7 +16,7 @@ function net = build (config)
   function trainretval = train (data)
     for epoch = 1:config.epochs % For each epoch
 
-      for idxSample = 1:rows(data) % Iterate through each sample
+      for idxSample = 1:rows(data) % Iterate through each sample (Lets do it stochasticly, why not)
         output = data[idxSample];
 
         for idxLayer = 1:rows(config.layers) % And through each layer
@@ -25,7 +25,7 @@ function net = build (config)
           output = layer.activation(weight * input);
         end
 
-        % Here take place the optimizations
+        % Here take place the optimizations (After k samples, or 1 epoch)
       end
 
     end
