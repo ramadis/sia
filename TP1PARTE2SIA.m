@@ -13,6 +13,8 @@ function ret = g (x)
   ret = 1/(1+exp(-x));
 endfunction
 
+jsondecode('["one", "two", "three"]')
+
 # Algorithm
 for i = 1:iterations
   for j = 1:numIn # iterate throug each sample from input arrays
@@ -27,4 +29,4 @@ for i = 1:iterations
    end
 end
 
-out
+out;

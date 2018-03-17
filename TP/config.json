@@ -1,0 +1,5 @@
+{
+  "layers": [{ "fn": "TANH", "bias": 1, "neurons": 10 }],
+  "optimization": { "type": "NONE", "params": {} },
+  "input": "training_data.json"
+}
