@@ -1,0 +1,1 @@
+% Clean up input script

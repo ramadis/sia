@@ -1,3 +1,6 @@
+% This file assumes the config shape
+% TODO: It should be merged with the config.m or vice versa
+
 function retval = parseLayer (rawLayer)
   retval.fn = activation.fromName(rawLayer{1});
   retval.bias = rawLayer{2};

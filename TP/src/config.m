@@ -1,8 +1,10 @@
+% This file assumes the config shape
 function retval = readConfig (filepath)
   retval = loadjson(filepath);
 endfunction
 
 function retval = parseConfig (rawConfig)
+  retval.epochs = rawConfig{6}; % Initial weights for the neural network
   retval.weights = rawConfig{5}; % Initial weights for the neural network
   retval.test = rawConfig{4}; % Test set
   retval.training = rawConfig{3}; % Training set
