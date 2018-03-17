@@ -28,7 +28,6 @@ function net = build (config)
         % Here take place the optimizations
       end
 
-      % Implement learning algorithm
     end
   endfunction
 
@@ -37,6 +36,7 @@ function net = build (config)
   endfunction
 
   net.train = train;
+  net.test = test;
 endfunction
 
 network.build = build;
