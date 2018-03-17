@@ -5,8 +5,9 @@ function retval = parseLayer (rawLayer)
 endfunction
 
 function retval = parseOptimization (rawOptimization)
-  retval.type = rawOptimization{1};
-  retval.params = rawOptimization{2}; % TODO: Edit to add params for optimizations
+  name = rawOptimization{1};
+  params = rawOptimization{2}; % TODO: Edit to add params for optimizations
+  retval = optimization.fromName(name)(params);
 endfunction
 
 parse.optimization = parseOptimization;
