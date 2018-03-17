@@ -23,4 +23,4 @@ nameFns = ['TANH'; 'EXP'];
 fnMap.TANH = tanh;
 fnMap.EXP = exp;
 
-activation.actFnFromName = fnFromName;
+activation.fromName = fnFromName;
