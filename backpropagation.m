@@ -1,7 +1,7 @@
 function [weights, bias, deltaCapa1] = backpropagation (weights, bias, deltaCapa2, coeff, capa1Values, z2Values)
  
-  capa1Size=size(capa1Values);
-  capa2Size=size(z2Values);
+  capa1Size=size(capa1Values, 1);
+  capa2Size=size(z2Values, 1);
   deltaCapa1=zeros(capa1Size, 1);
   
   for i = 1:capa1Size
