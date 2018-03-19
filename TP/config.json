@@ -5,4 +5,5 @@
   "test": "data_test.json",
   "weights": [],
   "epochs": 10000,
+  "eta": 0.1,
 }
