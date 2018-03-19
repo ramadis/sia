@@ -11,24 +11,32 @@ endfunction
 
 function net = build (config)
   weights = setInitialWeights(config.weights);
-
-
+  %{
   function trainretval = train (data)
     for epoch = 1:config.epochs % For each epoch
 
       for idxSample = 1:rows(data) % Iterate through each sample (Lets do it stochasticly, why not)
-        output = data[idxSample];
+        output[1] = data[idxSample];
 
-        for idxLayer = 1:rows(config.layers) % And through each layer
-          input = [layer.bias; previousOutput]; % Add the layer bias to the input
-          weight = weights[idxLayer]; % Get the weights for each layer
-          output = layer.activation(weight * input);
+        % Forward passing
+        for idxLayer = 1:rows(config.layers)
+          layer = config.layers[idxLayer];
+          input[idxLayer] = [layer.bias; output];
+          weights[idxLayer] = config.weights[idxLayer];
+          output[idxLayer + 1] = layer.activation(weight * input);
+        end
+
+        % Backpropagation
+        for idxLayer = rows(config.layers):2
+          (weights[idxLayer - 1]' * delta[idxLayer]) .* (output[idxLayer] .* (1 - output[idxLayer]))(2:end);
+
         end
 
         % Here take place the optimizations (After k samples, or 1 epoch)
       end
 
     end
+    %}
   endfunction
 
   function testretval = test (data)

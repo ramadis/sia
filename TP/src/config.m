@@ -4,6 +4,7 @@ function retval = readConfig (filepath)
 endfunction
 
 function retval = parseConfig (rawConfig)
+  retval.eta = rawConfig{7}; % Initial weights for the neural network
   retval.epochs = rawConfig{6}; % Initial weights for the neural network
   retval.weights = rawConfig{5}; % Initial weights for the neural network
   retval.test = rawConfig{4}; % Test set
