@@ -11,7 +11,7 @@ endfunction
 function retval = parseConfig (rawConfig)
   retval.eta = rawConfig.eta; % Initial weights for the neural network
   retval.epochs = rawConfig.epochs; % Initial weights for the neural network
-  retval.weights = rawConfig.weights; % Initial weights for the neural network
+  retval.weights = cell2mat(rawConfig.weights); % Initial weights for the neural network
   retval.test = rawConfig.test; % Test set
   retval.training = rawConfig.training; % Training set
   retval.optimization = arrayfun(parse.optimization, rawConfig.optimization); % Optimization algorithms for backpropagation

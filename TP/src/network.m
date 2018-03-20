@@ -1,3 +1,7 @@
+function retval = network
+  retval.build = @build;
+endfunction
+
 function retval = setInitialWeights (weights, size) % TODO check function signature
   if (rows(weights) < 1)
     retval = rand(size);
@@ -10,6 +14,7 @@ function retval = setInitialWeights (weights, size) % TODO check function signat
 endfunction
 
 function net = build (config)
+  config
   weights = setInitialWeights(config.weights);
   %{
   function trainretval = train (data)
@@ -36,15 +41,13 @@ function net = build (config)
       end
 
     end
-    %}
   endfunction
 
   function testretval = test (data)
     testretval = 1;
   endfunction
+  %}
 
   net.train = train;
   net.test = test;
 endfunction
-
-network.build = build;
