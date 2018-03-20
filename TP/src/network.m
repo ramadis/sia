@@ -1,5 +1,7 @@
 function retval = network
   retval.build = @build;
+  retval.train = @train;
+  retval.test = @test;
 endfunction
 
 function retval = setInitialWeights (weights, size) % TODO check function signature
@@ -11,38 +13,42 @@ function retval = setInitialWeights (weights, size) % TODO check function signat
   retval = weights;
 endfunction
 
-function net = build (config)
+function retval = train (config)
+  data = [];
 
-  weights = setInitialWeights(config.weights);
-  function trainretval = train (data)
-    for epoch = 1:config.epochs % For each epoch
+  for epoch = 1:config.epochs % For each epoch
+    input = output = [];
 
-      for idxSample = 1:rows(data) % Iterate through each sample (Lets do it stochasticly, why not)
-        output = [ data(idxSample) ];
+    for idxSample = 1:rows(data) % Iterate through each sample (Lets do it stochasticly, why not)
+      output = [ data(idxSample) ];
 
-        % Forward passing
-        for idxLayer = 1:rows(config.layers)
-          layer = config.layers(idxLayer);
-          input = [ input [layer.bias; output] ];
-          weights = [ weights config.weights(idxLayer) ];
-          output = [ output layer.activation(weight * input)];
-        end
-
-        % Backpropagation
-        for idxLayer = rows(config.layers):2
-          %(weights[idxLayer - 1]' * delta[idxLayer]) .* (output[idxLayer] .* (1 - output[idxLayer]))(2:end);
-        end
-
-        % Here take place the optimizations (After k samples, or 1 epoch)
+      % Forward passing
+      for idxLayer = 1:rows(config.layers)
+        layer = config.layers(idxLayer);
+        input = [ input [layer.bias; output] ];
+        weights = [ weights config.weights(idxLayer) ];
+        output = [ output layer.activation(weight * input)];
       end
 
+      % Backpropagation
+      for idxLayer = rows(config.layers):2
+        %(weights[idxLayer - 1]' * delta[idxLayer]) .* (output[idxLayer] .* (1 - output[idxLayer]))(2:end);
+      end
+
+      % Optimizations
     end
-  endfunction
 
-  function testretval = test (data)
-    testretval = 1;
-  endfunction
+  end
 
-  %net = @train;
-  %net.test = @test;
+  retval = config;
+  % retval.weights = weights;
+endfunction
+
+function retval = test (data)
+  retval = 1;
+endfunction
+
+function retval = build (config)
+  retval = config;
+  retval.weights = setInitialWeights(config.weights);
 endfunction
