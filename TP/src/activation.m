@@ -19,11 +19,11 @@ endfunction
 function retval = fnFromName (name)
   % To add a new activation function add the name to the nameFns array
   % and add the function to the fnMap structure.
-  nameFns = ['TANH'; 'EXP'; 'ID'];
+  nameFns = ['TANH'; 'EXP'; 'INPUT'];
 
   fnMap.TANH = @tanh;
   fnMap.EXP = @exp;
-  fnMap.ID = @id;
+  fnMap.INPUT = @id;
 
   validFn = any(strmatch(name, nameFns, 'exact'));
 

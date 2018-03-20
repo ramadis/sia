@@ -14,22 +14,23 @@ function retval = setInitialWeights (weights, size) % TODO check function signat
 endfunction
 
 function retval = train (config)
-  elem.output = 1;
-  elem.x = 2;
-  elem.y = 1;
+  elem = [2; 3; 4]; % output ; inputs
   data = [ elem ];
 
   for epoch = 1:config.epochs % For each epoch
     weights = input = output = [];
 
     for sample = data % Iterate through each sample (Lets do it stochasticly, why not)
-      output = [ sample.output ];
+      layer = config.layers(1);
+      output = [[ layer.bias ; sample(2:end) ]]
 
       % Forward passing
-      for layer = config.layers
-        input = [ input [layer.bias; output] ]
-        weights = [ weights config.weights(idxLayer) ];
-        output = [ output layer.activation(weight * input)];
+      for idxLayer = 2:size(config.layers, 2)
+        layer = config.layers(1, idxLayer);
+        input = output(idxLayer - 1);
+        weights = config.weights(idxLayer - 1);
+
+        output = [ output [ layer.bias; layer.activation(input * weights) ] ]
       end
 
       % Backpropagation
