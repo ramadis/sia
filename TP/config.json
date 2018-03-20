@@ -4,6 +4,6 @@
   "training": "data_training.json",
   "test": "data_test.json",
   "weights": [],
-  "epochs": 10000,
+  "epochs": 1,
   "eta": 0.1
 }

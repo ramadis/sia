@@ -6,7 +6,7 @@ endfunction
 
 function retval = setInitialWeights (weights, size) % TODO check function signature
   if (rows(weights) < 1)
-    retval = 2 * rand(4,1) - 1; % random values within [-1;1]
+    retval = 2 * rand(1,3) - 1; % random values within [-1;1]
     return
   endif
 
@@ -22,15 +22,15 @@ function retval = train (config)
 
     for sample = data % Iterate through each sample (Lets do it stochasticly, why not)
       layer = config.layers(1);
-      output = [[ layer.bias ; sample(2:end) ]]
+      output{1} = [ layer.bias ; sample(2:end) ];
 
       % Forward passing
       for idxLayer = 2:size(config.layers, 2)
         layer = config.layers(1, idxLayer);
-        input = output(idxLayer - 1);
-        weights = config.weights(idxLayer - 1);
-
-        output = [ output [ layer.bias; layer.activation(input * weights) ] ]
+        input = output{idxLayer - 1};
+        weights = config.weights{idxLayer - 1};
+        input * weights
+        %output{idxLayer} = [ layer.bias; layer.activation(input * weights) ];
       end
 
       % Backpropagation
@@ -53,5 +53,5 @@ endfunction
 
 function retval = build (config)
   retval = config;
-  retval.weights = setInitialWeights(config.weights);
+  retval.weights{1} = setInitialWeights(config.weights);
 endfunction
