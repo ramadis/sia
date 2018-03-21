@@ -6,7 +6,7 @@ endfunction
 
 function retval = setInitialWeights (weights, size) % TODO check function signature
   if (rows(weights) < 1)
-    retval = 2 * rand(1,3) - 1; % random values within [-1;1]
+    retval = 2 * rand(10,3) - 1; % random values within [-1;1] (Filas de la current x Columnas de las previous)
     return
   endif
 
@@ -29,8 +29,7 @@ function retval = train (config)
         layer = config.layers(1, idxLayer);
         input = output{idxLayer - 1};
         weights = config.weights{idxLayer - 1};
-        input * weights
-        %output{idxLayer} = [ layer.bias; layer.activation(input * weights) ];
+        output{idxLayer} = [ layer.bias; layer.activation(weights * input) ];
       end
 
       % Backpropagation

@@ -2,12 +2,12 @@ function retval = activation ()
   retval.fromName = @fnFromName;
 endfunction
 
-function retval = tanh (x)
+function retval = tanh_ (x)
   beta = 1;
   retval = tanh(beta * x);
 endfunction
 
-function retval = exp (x)
+function retval = exp_ (x)
   beta = 1;
   retval = (1 + exp(-2 * x * beta)) .^ -1;
 endfunction
@@ -21,8 +21,8 @@ function retval = fnFromName (name)
   % and add the function to the fnMap structure.
   nameFns = ['TANH'; 'EXP'; 'INPUT'];
 
-  fnMap.TANH = @tanh;
-  fnMap.EXP = @exp;
+  fnMap.TANH = @tanh_;
+  fnMap.EXP = @exp_;
   fnMap.INPUT = @id;
 
   validFn = any(strmatch(name, nameFns, 'exact'));
