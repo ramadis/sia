@@ -27,20 +27,29 @@ function retval = train (config)
 
     for sample = data % Iterate through each sample (Lets do it stochasticly, why not)
 
+      % Initialize procedure with input data
       layer = config.layers(1);
-      output{1} = [ layer.bias ; sample(2:end) ];
+      input{1} = sample(2:end);
+      output{1} = input{1};
+
+      % Useful variables
+      correctOutput = sample(1);
+      layerAmount = size(config.layers, 2);
 
       % Forward passing
-      for idxLayer = 2:size(config.layers, 2)
+      for idxLayer = 1:(layerAmount - 1)
         layer = config.layers(1, idxLayer);
-        input = output{idxLayer - 1};
-        weights = config.weights{idxLayer - 1};
-        output{idxLayer} = [ layer.bias; layer.activation(weights * input) ];
+        input{idxLayer + 1} = [layer.bias; layer.activation(output{idxLayer})];
+        weights = config.weights{idxLayer};
+        output{idxLayer + 1} = weights * input{idxLayer + 1};
       end
+      finalOutput = config.layers(1, layerAmount).activation(output{layerAmount});
 
       % Backpropagation
-      for idxLayer = rows(config.layers):2
-        %(weights[idxLayer - 1]' * delta[idxLayer]) .* (output[idxLayer] .* (1 - output[idxLayer]))(2:end);
+      delta{layerAmount} = finalOutput - correctOutput;
+      for idxLayer = (layerAmount - 1):2
+        delta{idxLayer} = ((config.weights{idxLayer}' * delta{idxLayer + 1}) .* (output{idxLayer} .* (1 – output{idxLayer})))(2:end);
+        config.weights{layerAmount} -= (config.eta * (delta{idxLayer + 1} * input{idxLayer + 1}'));
       end
 
       % Optimizations
@@ -49,7 +58,6 @@ function retval = train (config)
   end
 
   retval = config;
-  % retval.weights = weights;
 endfunction
 
 function retval = test (data)
