@@ -19,17 +19,12 @@ function retval = setInitialWeights (config) % TODO check function signature
 endfunction
 
 function retval = train (config)
-  elem1 = [0; 0; 0]; % output ; inputs
-  elem2 = [1; 1; 0]; % output ; inputs
-  elem3 = [1; 0; 1]; % output ; inputs
-  elem4 = [0; 1; 1]; % output ; inputs
-
-  data = [ elem1, elem2, elem3, elem4 ];
-
   for epoch = 1:config.epochs % For each epoch
     weights = input = output = [];
 
-    for sample = data % Iterate through each sample (Lets do it stochasticly, why not)
+    for idxSample = 1:rows(config.training) % Iterate through each sample (Lets do it stochasticly, why not)
+      % Sample
+      sample = config.training(idxSample, 1:end)';
 
       % Initialize procedure with input data
       layer = config.layers(1);
