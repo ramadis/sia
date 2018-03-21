@@ -45,17 +45,11 @@ function retval = train (config)
       end
       finalOutput = config.layers(1, layerAmount).activation(output{layerAmount});
 
-      weights = config.weights;
-      output;
-      input
-      finalOutput;
-
       % Backpropagation
       delta{layerAmount} = finalOutput - correctOutput;
       for idxLayer = (layerAmount - 1):2
-        idxLayer
         delta{idxLayer} = (config.weights{idxLayer}' * delta{idxLayer + 1}) .* (input{idxLayer + 1} .* (1 - input{idxLayer + 1}));
-        config.weights{layerAmount} -= (config.eta * (delta{idxLayer + 1} * input{idxLayer + 1}'));
+        config.weights{idxLayer} -= (config.eta * (delta{idxLayer + 1} * input{idxLayer + 1}'));
       end
 
       % Optimizations
