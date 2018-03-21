@@ -8,14 +8,7 @@ function retval = setInitialWeights (config) % TODO check function signature
   config.weights{1} = 2 * rand(2,3) - 1;
   config.weights{2} = 2 * rand(1,3) - 1;
   retval = config.weights;
-  return;
-
-  if (rows(weights) < 1)
-    retval = 2 * rand(10,3) - 1; % random values within [-1;1] (Filas de la current x Columnas de las previous) + el bias (que no lee weights pero si da weights)
-    return
-  endif
-
-  retval = weights;
+  % TODO: Loop through layers, and create a weight for each one
 endfunction
 
 function retval = train (config)
@@ -59,13 +52,12 @@ function retval = train (config)
 endfunction
 
 function retval = test (config)
-  sample = [0; 0; 1]
+  sample = [0; 1]
   layer = config.layers(1);
-  input{1} = sample(2:end);
+  input{1} = sample;
   output{1} = input{1};
 
   % Useful variables
-  correctOutput = sample(1);
   layerAmount = size(config.layers, 2);
 
   % Forward passing
