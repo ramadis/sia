@@ -19,8 +19,12 @@ function retval = setInitialWeights (config) % TODO check function signature
 endfunction
 
 function retval = train (config)
-  elem = [0; 0; 0]; % output ; inputs
-  data = [ elem ];
+  elem1 = [0; 0; 0]; % output ; inputs
+  elem2 = [1; 1; 0]; % output ; inputs
+  elem3 = [1; 0; 1]; % output ; inputs
+  elem4 = [0; 1; 1]; % output ; inputs
+
+  data = [ elem1, elem2, elem3, elem4 ];
 
   for epoch = 1:config.epochs % For each epoch
     weights = input = output = [];
@@ -54,14 +58,30 @@ function retval = train (config)
 
       % Optimizations
     end
-
   end
 
   retval = config;
 endfunction
 
-function retval = test (data)
-  retval = 1;
+function retval = test (config)
+  sample = [0; 0; 1]
+  layer = config.layers(1);
+  input{1} = sample(2:end);
+  output{1} = input{1};
+
+  % Useful variables
+  correctOutput = sample(1);
+  layerAmount = size(config.layers, 2);
+
+  % Forward passing
+  for idxLayer = 1:(layerAmount - 1)
+    layer = config.layers(1, idxLayer);
+    input{idxLayer + 1} = [layer.bias; layer.activation(output{idxLayer})];
+    weights = config.weights{idxLayer};
+    output{idxLayer + 1} = weights * input{idxLayer + 1};
+  end
+
+  retval = config.layers(1, layerAmount).activation(output{layerAmount});
 endfunction
 
 function retval = build (config)
