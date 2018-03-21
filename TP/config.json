@@ -1,9 +1,9 @@
 {
   "layers": [{ "activation": "ID", "bias": 1, "neurons": 2 }, { "activation": "TANH", "bias": 1, "neurons": 2 }, { "activation": "TANH", "bias": 0, "neurons": 1 }],
   "optimization": [{ "type": "NONE", "params": {} }, { "type": "NONE", "params": {} }],
-  "training": "data_training.json",
+  "training": "terrain12.json",
   "test": "data_test.json",
   "weights": [],
-  "epochs": 10000,
+  "epochs": 1,
   "eta": 0.1
 }
