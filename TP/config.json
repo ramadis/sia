@@ -1,9 +1,9 @@
 {
   "layers": [{ "activation": "ID", "bias": 1, "neurons": 2 }, { "activation": "TANH", "bias": 1, "neurons": 2 }, { "activation": "TANH", "bias": 0, "neurons": 1 }],
   "optimization": [{ "type": "NONE", "params": {} }, { "type": "NONE", "params": {} }],
-  "training": "data/logic/xor.json",
+  "training": "data/logic/and.json",
   "test": "data_test.json",
   "weights": [],
-  "epochs": 1000,
+  "epochs": 1,
   "eta": 0.01
 }
