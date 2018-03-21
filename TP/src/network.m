@@ -5,8 +5,8 @@ function retval = network
 endfunction
 
 function retval = setInitialWeights (config) % TODO check function signature
-  config.weights{1} = 2 * rand(10,3) - 1;
-  config.weights{2} = 2 * rand(1,11) - 1;
+  config.weights{1} = 2 * rand(2,3) - 1;
+  config.weights{2} = 2 * rand(1,3) - 1;
   retval = config.weights;
   return;
 
@@ -19,7 +19,7 @@ function retval = setInitialWeights (config) % TODO check function signature
 endfunction
 
 function retval = train (config)
-  elem = [2; 3; 4]; % output ; inputs
+  elem = [0; 0; 0]; % output ; inputs
   data = [ elem ];
 
   for epoch = 1:config.epochs % For each epoch
@@ -45,10 +45,16 @@ function retval = train (config)
       end
       finalOutput = config.layers(1, layerAmount).activation(output{layerAmount});
 
+      weights = config.weights;
+      output;
+      input
+      finalOutput;
+
       % Backpropagation
       delta{layerAmount} = finalOutput - correctOutput;
       for idxLayer = (layerAmount - 1):2
-        delta{idxLayer} = ((config.weights{idxLayer}' * delta{idxLayer + 1}) .* (output{idxLayer} .* (1 – output{idxLayer})))(2:end);
+        idxLayer
+        delta{idxLayer} = (config.weights{idxLayer}' * delta{idxLayer + 1}) .* (input{idxLayer + 1} .* (1 - input{idxLayer + 1}));
         config.weights{layerAmount} -= (config.eta * (delta{idxLayer + 1} * input{idxLayer + 1}'));
       end
 
