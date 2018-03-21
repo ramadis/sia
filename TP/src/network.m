@@ -23,7 +23,7 @@ function retval = train (config)
     weights = input = output = [];
 
     for idxSample = 1:rows(config.training) % Iterate through each sample (Lets do it stochasticly, why not)
-      % Sample
+      % Set sample shape correctly
       sample = config.training(idxSample, 1:end)';
 
       % Initialize procedure with input data
