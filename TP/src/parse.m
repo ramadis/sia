@@ -16,6 +16,8 @@ endfunction
 function retval = parseOptimization (rawOptimization)
   rawOptimization = rawOptimization{1};
   name = rawOptimization.type;
-  params = rawOptimization.params; % TODO: Edit to add params for optimizations
-  retval = optimization.fromName(name)(params);
+  params = rawOptimization.params;
+  retval.function = optimization.fromName(name);
+  retval.name = name;
+  retval.params = params;
 endfunction

@@ -53,6 +53,15 @@ function retval = train (config)
       end
 
       % Optimizations
+      for optimization = config.optimization
+        if (optimization.name = 'ETAMEJORADO' && mod(idxSample, optimization.params.k) == 0)
+          % implement eta mejorado
+        endif
+
+        if (optimization.name = 'MOMENTUM')
+          % implement momentum
+        endif
+      end
     end
   end
 
