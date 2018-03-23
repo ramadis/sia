@@ -19,17 +19,17 @@ endfunction
 
 function retval = train (config)
   for epoch = 1:config.epochs % For each epoch
-    for idxSample = 1:rows(config.training) % Iterate through each sample (Lets do it stochasticly, why not)
+    for idxSample = 1:rows(config.training') % Iterate through each sample (Lets do it stochasticly, why not)
       % Set sample shape correctly
-      sample = config.training(idxSample, 1:end)';
+      sample = config.training{idxSample};
 
       % Initialize procedure with input data
       layer = config.layers(1);
-      input{1} = sample(2:end);
+      input{1} = sample.input';
       output{1} = input{1};
 
       % Useful variables
-      correctOutput = sample(1);
+      correctOutput = sample.output';
       layerAmount = size(config.layers, 2);
 
       % Forward passing

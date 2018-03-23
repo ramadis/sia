@@ -4,11 +4,11 @@ endfunction
 
 
 
-function retval = momentum (params)
+function retval = momentum (config)
   retval = 1;
 endfunction
 
-function retval = etaimproved (params)
+function retval = etaimproved (config)
   retval = 2;
 endfunction
 
