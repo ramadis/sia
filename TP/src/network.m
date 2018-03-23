@@ -14,7 +14,7 @@ function retval = setInitialWeights (config) % TODO check function signature
     config.weights{idxLayer} = 2 * rand(nextLayer.neurons,layer.neurons + 1) - 1;
   end
 
-  retval = config.weights
+  retval = config.weights;
 endfunction
 
 function retval = train (config)
@@ -60,7 +60,7 @@ function retval = train (config)
 endfunction
 
 function retval = test (config)
-  sample = [-1; 1];
+  sample = [1; 1];
   layer = config.layers(1);
   input{1} = sample;
   output{1} = input{1};
