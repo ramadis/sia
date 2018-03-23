@@ -60,25 +60,31 @@ function retval = train (config)
 endfunction
 
 function retval = test (config)
-  sample = [1; 1];
-  layer = config.layers(1);
-  input{1} = sample;
-  output{1} = input{1};
 
-  sample
+  for idxSample = 1:rows(config.training')
+    % Set sample shape correctly
+    sample = config.training{idxSample};
 
-  % Useful variables
-  layerAmount = size(config.layers, 2);
+    % Set initial variables
+    layer = config.layers(1);
+    input{1} = sample.input';
+    output{1} = input{1};
 
-  % Forward passing
-  for idxLayer = 1:(layerAmount - 1)
-    layer = config.layers(1, idxLayer);
-    input{idxLayer + 1} = [layer.bias; layer.activation(output{idxLayer})];
-    weights = config.weights{idxLayer};
-    output{idxLayer + 1} = weights * input{idxLayer + 1};
+    % Useful variables
+    layerAmount = size(config.layers, 2);
+
+    % Forward passing
+    for idxLayer = 1:(layerAmount - 1)
+      layer = config.layers(1, idxLayer);
+      input{idxLayer + 1} = [layer.bias; layer.activation(output{idxLayer})];
+      weights = config.weights{idxLayer};
+      output{idxLayer + 1} = weights * input{idxLayer + 1};
+    end
+
+    finalOutput = config.layers(1, layerAmount).activation(output{layerAmount});
   end
 
-  retval = config.layers(1, layerAmount).activation(output{layerAmount});
+  retval = 1;
 endfunction
 
 function retval = build (config)

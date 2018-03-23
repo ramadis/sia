@@ -2,7 +2,7 @@
   "layers": [{ "activation": "ID", "bias": 1, "neurons": 2 }, { "activation": "TANH", "bias": 1, "neurons": 2 }, { "activation": "TANH", "bias": 0, "neurons": 1 }],
   "optimization": [{ "type": "NONE", "params": { "k": 1 } }, { "type": "NONE", "params": {} }],
   "training": "data/logic/training/and.json",
-  "test": "data_test.json",
+  "test": "data/logic/test/and.json",
   "weights": [],
   "epochs": 1000,
   "eta": 0.1
