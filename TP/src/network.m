@@ -69,7 +69,6 @@ function retval = train (config)
 endfunction
 
 function retval = test (config)
-
   for idxSample = 1:rows(config.training')
     % Set sample shape correctly
     sample = config.training{idxSample};
@@ -91,7 +90,14 @@ function retval = test (config)
     end
 
     finalOutput = config.layers(1, layerAmount).activation(output{layerAmount});
+    instances.expectedOutput{idxSample} = sample.output;
+    instances.output{idxSample} = finalOutput;
   end
+
+  % Print values
+  instances.expectedOutput % Expected output
+  instances.output % Output
+  config.error(cell2mat(instances.expectedOutput), cell2mat(instances.output)) % Error
 
   retval = 1;
 endfunction

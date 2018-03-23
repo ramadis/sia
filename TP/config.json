@@ -4,6 +4,7 @@
   "training": "data/logic/training/and.json",
   "test": "data/logic/test/and.json",
   "weights": [],
-  "epochs": 1,
+  "error": "MSE",
+  "epochs": 10000,
   "eta": 0.1
 }
