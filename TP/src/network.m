@@ -12,10 +12,7 @@ function retval = setInitialWeights (config) % TODO check function signature
 endfunction
 
 function retval = train (config)
-  config.weights
   for epoch = 1:config.epochs % For each epoch
-    weights = input = output = [];
-
     for idxSample = 1:rows(config.training) % Iterate through each sample (Lets do it stochasticly, why not)
       % Set sample shape correctly
       sample = config.training(idxSample, 1:end)';
@@ -40,32 +37,29 @@ function retval = train (config)
 
       % Backpropagation
       delta{layerAmount} = finalOutput - correctOutput;
+
       for idxLayer = (layerAmount - 1):-1:2
-        delta{idxLayer} = (config.weights{idxLayer}' * delta{idxLayer + 1}) .* (input{idxLayer + 1} .* (1 - input{idxLayer + 1}));
+        delta{idxLayer} = ((config.weights{idxLayer}' * delta{idxLayer + 1}) .* (input{idxLayer + 1} .* (1 - input{idxLayer + 1})))(2:end);
       end
 
       for idxLayer = (layerAmount - 1):-1:1
-        % TODO: The issue seems to be here
-        i = input{idxLayer + 1}'
-        d = delta{idxLayer + 1}
-        e = (config.eta * (d * i))
-        g = config.weights{idxLayer}
-
         config.weights{idxLayer} -= (config.eta * (delta{idxLayer + 1} * input{idxLayer + 1}'));
       end
+
       % Optimizations
     end
   end
 
-  config.weights
   retval = config;
 endfunction
 
 function retval = test (config)
-  sample = [0; 1];
+  sample = [-1; 1];
   layer = config.layers(1);
   input{1} = sample;
   output{1} = input{1};
+
+  sample
 
   % Useful variables
   layerAmount = size(config.layers, 2);
