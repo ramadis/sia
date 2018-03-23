@@ -5,10 +5,16 @@ function retval = network
 endfunction
 
 function retval = setInitialWeights (config) % TODO check function signature
-  config.weights{1} = 2 * rand(2,3) - 1;
-  config.weights{2} = 2 * rand(1,3) - 1;
-  retval = config.weights;
-  % TODO: Loop through layers, and create a weight for each one
+  layerAmount = size(config.layers, 2);
+
+  for idxLayer = 1:(layerAmount - 1)
+    layer = config.layers(1, idxLayer);
+    nextLayer = config.layers(1, idxLayer + 1);
+
+    config.weights{idxLayer} = 2 * rand(nextLayer.neurons,layer.neurons + 1) - 1;
+  end
+
+  retval = config.weights
 endfunction
 
 function retval = train (config)
