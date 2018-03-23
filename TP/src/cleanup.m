@@ -1,4 +1,5 @@
 % Clean up input script
 function retval = cleanup (input)
-  retval = loadjson(char(['../' input])).data;
+  data = loadjson(char(['../' input])).data;
+  retval = data;
 endfunction
