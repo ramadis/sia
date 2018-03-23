@@ -4,13 +4,13 @@ function retval = network
   retval.test = @test;
 endfunction
 
-function retval = setInitialWeights (config) % TODO check function signature
+function retval = setInitialWeights (config)
   layerAmount = size(config.layers, 2);
 
+  % Generate random initial weights given the size of each layer
   for idxLayer = 1:(layerAmount - 1)
     layer = config.layers(1, idxLayer);
     nextLayer = config.layers(1, idxLayer + 1);
-
     config.weights{idxLayer} = 2 * rand(nextLayer.neurons,layer.neurons + 1) - 1;
   end
 
