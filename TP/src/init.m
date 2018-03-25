@@ -1,5 +1,6 @@
 % TODO: Standarize data
 % TODO: Backprop optimizations
+% TODO: Plotting handling
 
 addpath('../lib/jsonlab');
 rand('state', sum( 100 * clock )); % seed random state
