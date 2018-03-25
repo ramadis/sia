@@ -19,17 +19,17 @@ endfunction
 
 function retval = train (config)
   for epoch = 1:config.epochs % For each epoch
-    for idxSample = 1:rows(config.training') % Iterate through each sample (Lets do it stochasticly, why not)
+    for idxSample = 1:rows(config.training) % Iterate through each sample (Lets do it stochasticly, why not)
       % Set sample shape correctly
-      sample = config.training{idxSample};
+      sample = config.training(idxSample, :);
 
       % Initialize procedure with input data
       layer = config.layers(1);
-      input{1} = sample.input';
+      input{1} = [sample(1); sample(2)];
       output{1} = input{1};
 
       % Useful variables
-      correctOutput = sample.output';
+      correctOutput = sample(3);
       layerAmount = size(config.layers, 2);
 
       % Forward passing
@@ -69,13 +69,13 @@ function retval = train (config)
 endfunction
 
 function retval = test (config)
-  for idxSample = 1:rows(config.training')
+  for idxSample = 1:rows(config.training)
     % Set sample shape correctly
-    sample = config.training{idxSample};
+    sample = config.training(idxSample, :);
 
     % Set initial variables
     layer = config.layers(1);
-    input{1} = sample.input';
+    input{1} = [sample(1); sample(2)];
     output{1} = input{1};
 
     % Useful variables
@@ -90,13 +90,13 @@ function retval = test (config)
     end
 
     finalOutput = config.layers(1, layerAmount).activation(output{layerAmount});
-    instances.expectedOutput{idxSample} = sample.output;
+    instances.expectedOutput{idxSample} = sample(3);
     instances.output{idxSample} = finalOutput;
   end
 
   % Print values
-  instances.expectedOutput % Expected output
-  instances.output % Output
+  instances.expectedOutput; % Expected output
+  instances.output; % Output
   config.error(cell2mat(instances.expectedOutput), cell2mat(instances.output)) % Error
 
   retval = 1;
