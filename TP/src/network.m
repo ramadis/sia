@@ -19,6 +19,9 @@ function retval = setInitialWeights (config)
 endfunction
 
 function retval = train (config)
+  firstEtaPass = 0;
+  errors = [];
+
   for epoch = 1:config.epochs % For each epoch
     for idxSample = 1:rows(config.training') % Iterate through each sample (Lets do it stochasticly, why not)
       % Set sample shape correctly
@@ -30,7 +33,6 @@ function retval = train (config)
       output{1} = input{1};
 
       % Useful variables
-      firstEtaPass = 0;
       correctOutput = sample.output';
       layerAmount = size(config.layers, 2);
 
@@ -57,26 +59,31 @@ function retval = train (config)
       % Optimizations
       for optimization = config.optimization
         if (optimization.name == 'ETAMEJORADO' && mod(idxSample, optimization.params.k) == 0)
-          % TODO: Check if mod k should be checked only for delta < 0
+          % TODO: Check if mod k should be checked only for delta < 0. Probably it shouldnt be idxSample
+
           if (firstEtaPass == 0)
-            % Save values before backpropagation
+            % Initialize values
             lastWeights = config.weights;
             lastError = test(config, {config.training{1:idxSample}});
-            firstEtaPass == 1;
+            firstEtaPass = 1;
           else
             currentError = test(config, {config.training{1:idxSample}});
             deltaError = currentError - lastError;
 
+            % If the error was reduced, jump!
             if (deltaError < 0 )
               config.eta += optimization.params.alpha;
               lastWeights = config.weights;
               lastError = currentError;
             endif
 
+            % If the error was increased, get back and walk with caution
             if (deltaError > 0)
               config.eta -= optimization.params.alpha * config.eta;
               config.weights = lastWeights;
             endif
+
+            errors = [errors lastError];
           endif
         endif
 
@@ -86,7 +93,7 @@ function retval = train (config)
       end
     end
   end
-
+  % savejson('data', errors, 'file.json');
   retval = config;
 endfunction
 
