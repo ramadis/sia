@@ -56,31 +56,40 @@ function retval = train (config)
         config.weights{idxLayer} -= (config.eta * (delta{idxLayer + 1} * input{idxLayer + 1}'));
       end
 
+      %errors = [errors test(config, {config.training{1:end}})];
+
       % Optimizations
       for optimization = config.optimization
-        if (optimization.name == 'ETAMEJORADO' && mod(idxSample, optimization.params.k) == 0)
-          % TODO: Check if mod k should be checked only for delta < 0. Probably it shouldnt be idxSample
+        if (optimization.name == 'ETAMEJORADO')
 
           if (firstEtaPass == 0)
             % Initialize values
             lastWeights = config.weights;
-            lastError = test(config, {config.training{1:idxSample}});
+            lastError = test(config, {config.training{1:end}}); % Should I check the error with the entire dataset?
+            currentStep = 0;
             firstEtaPass = 1;
           else
-            currentError = test(config, {config.training{1:idxSample}});
+            currentError = test(config, {config.training{1:end}});
             deltaError = currentError - lastError;
 
+            % Add a step if the error is decreasing
+            if (deltaError < 0)
+              currentStep += 1;
+            endif
+
             % If the error was reduced, jump!
-            if (deltaError < 0 )
+            if (deltaError < 0 && currentStep >= optimization.params.k)
               config.eta += optimization.params.alpha;
               lastWeights = config.weights;
               lastError = currentError;
+              currentStep = 0; % Start counting again
             endif
 
             % If the error was increased, get back and walk with caution
             if (deltaError > 0)
-              config.eta -= optimization.params.alpha * config.eta;
+              config.eta -= optimization.params.beta * config.eta;
               config.weights = lastWeights;
+              currentStep = 0; % Reset step if error increased
             endif
 
             errors = [errors lastError];
@@ -93,7 +102,7 @@ function retval = train (config)
       end
     end
   end
-  % savejson('data', errors, 'file.json');
+  % savejson('data', errors, 'file3.json');
   retval = config;
 endfunction
 
