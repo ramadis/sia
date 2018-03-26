@@ -1,8 +1,8 @@
 {
   "layers": [{ "activation": "ID", "bias": 1, "neurons": 2 }, { "activation": "TANH", "bias": 1, "neurons": 17 }, { "activation": "TANH", "bias": 1, "neurons": 1 }],
   "optimization": [{ "type": "ETAMEJORADO", "params": { "k": 2, "alpha": 0.05, "beta": 0.8 } }],
-  "training": "data/terrain/training/terrain12.json",
-  "test": "data/terrain/test/terrain12.json",
+  "training": "data/logic/training/xor.json",
+  "test": "data/logic/test/xor.json",
   "error": "MSE",
   "epochs": 100,
   "eta": 0.1
