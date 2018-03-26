@@ -5,6 +5,6 @@
   "test": "data/logic/test/and.json",
   "weights": [],
   "error": "MSE",
-  "epochs": 1,
+  "epochs": 10000,
   "eta": 0.1
 }

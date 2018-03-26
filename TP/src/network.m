@@ -52,11 +52,18 @@ function retval = train (config)
         config.weights{idxLayer} -= (config.eta * (delta{idxLayer + 1} * input{idxLayer + 1}'));
       end
 
+      % TODO: Calculate error
+
       % Optimizations
       for optimization = config.optimization
-        %if (optimization.name = 'ETAMEJORADO' && mod(idxSample, optimization.params.k) == 0)
-          % implement eta mejorado
-        %endif
+        % if (optimization.name = 'ETAMEJORADO' && mod(idxSample, optimization.params.k) == 0)
+        %   % deltaError = lastError < currentError;
+        %   % if ()
+        %     % config.eta -=
+        %
+        %   % end if
+        %   % implement eta mejorado
+        % endif
 
         %if (optimization.name = 'MOMENTUM')
           % implement momentum
