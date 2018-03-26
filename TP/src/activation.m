@@ -12,6 +12,10 @@ function retval = exp_ (x)
   retval = (1 + exp(-2 * x * beta)) .^ -1;
 endfunction
 
+function retval = sigm_ (x)
+  retval = 1/(1+e^-x);
+endfunction
+
 function retval = id (x)
   retval = x;
 endfunction

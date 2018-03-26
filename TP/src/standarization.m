@@ -25,10 +25,12 @@ function retval= standarize(data)
   input = reshape(normalised_diff(rawInput), [setAmount, rows(rawInput') / setAmount]);
 
   % Rebuild initial data structure
+  out = {};
   for idx = 1:rows(input)
-    data = [ data struct('output', [output(idx)], 'input', input(idx, 1:end)) ];
+    out{idx} = struct('output', [output(idx)], 'input', input(idx, 1:end));
   end
 
   % Remove repeated values
-  retval = data(1:end/2);
+  data
+  retval = out(1:end)
 endfunction

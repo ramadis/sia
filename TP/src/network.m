@@ -56,11 +56,9 @@ function retval = train (config)
         config.weights{idxLayer} -= (config.eta * (delta{idxLayer + 1} * input{idxLayer + 1}'));
       end
 
-      %errors = [errors test(config, {config.training{1:end}})];
-
       % Optimizations
       for optimization = config.optimization
-        if (optimization.name == 'ETAMEJORADO')
+        if (optimization.name == 'ETAMEJORADX')
 
           if (firstEtaPass == 0)
             % Initialize values
@@ -101,8 +99,10 @@ function retval = train (config)
         %endif
       end
     end
+    %errors = [errors test(config, {config.training{1:end}})];
+
   end
-  % savejson('data', errors, 'file3.json');
+  %savejson('data', errors, 'file3.json');
   retval = config;
 endfunction
 
@@ -133,8 +133,8 @@ function retval = test (config, test)
   end
 
   % Print values
-  instances.expectedOutput; % Expected output
-  instances.output; % Output
+  instances.expectedOutput % Expected output
+  instances.output % Output
   retval = config.error(cell2mat(instances.expectedOutput), cell2mat(instances.output)); % Error
 endfunction
 
