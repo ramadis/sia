@@ -5,7 +5,7 @@
 To run the program clone this repo and run on the console
 
 ```sh
-cd src
+cd TP\ PARTE\ 2/src
 octave init.m
 ```
 
