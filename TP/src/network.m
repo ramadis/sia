@@ -19,7 +19,7 @@ function retval = setInitialWeights (config)
 endfunction
 
 function retval = train (config)
-  firstEtaPass = 0;
+  firstMomentumPass = firstEtaPass = 0;
   testErr = errors = [];
 
   for epoch = 1:config.epochs % For each epoch
@@ -59,16 +59,16 @@ function retval = train (config)
 
       % Optimizations
       for optimization = config.optimization
-        if (optimization.name == 'ETAMEJORADX')
+        if (strcmp(optimization.name, 'ETAMEJORADO'))
 
           if (firstEtaPass == 0)
             % Initialize values
             lastWeights = config.weights;
-            lastError = test(config, { sample }); % TODO: Should I check the error with the entire dataset?
+            lastError = test(config, {config.training{1:end}}); % TODO: Should I check the error with the entire dataset?
             currentStep = 0;
             firstEtaPass = 1;
           else
-            currentError = test(config, { sample });
+            currentError = test(config, {config.training{1:end}});
             deltaError = currentError - lastError;
 
             % Add a step if the error is decreasing
@@ -99,9 +99,18 @@ function retval = train (config)
           endif
         endif
 
-        %if (optimization.name = 'MOMENTUM')
-          % implement momentum
-        %endif
+        if (strcmp(optimization.name, 'MOMENTUM'))
+          if (firstMomentumPass == 0)
+            % Initialize values
+            lastWeights = config.weights;
+            firstMomentumPass = 1;
+          else
+            for idxLayer = (layerAmount - 1):-1:1
+              deltaWeights = config.weights{idxLayer} - lastWeights{idxLayer};
+              config.weights{idxLayer} -= deltaWeights * optimization.params.alpha;
+            end
+          endif
+        endif
       end
     end
     errors = [errors test(config, {config.training{1:end}})];

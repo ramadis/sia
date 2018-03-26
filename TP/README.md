@@ -4,7 +4,10 @@
 
 To run the program clone this repo and run on the console
 
-`octave ./src/init.m`
+```sh
+cd src
+octave init.m
+```
 
 ## Configuration
 
