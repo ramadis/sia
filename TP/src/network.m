@@ -5,6 +5,7 @@ function retval = network
 endfunction
 
 function retval = setInitialWeights (config)
+  % TODO: If initial weights are set, do not overwrite
   layerAmount = size(config.layers, 2);
 
   % Generate random initial weights given the size of each layer
@@ -41,6 +42,9 @@ function retval = train (config)
       end
       finalOutput = config.layers(1, layerAmount).activation(output{layerAmount});
 
+      % Save weights before backpropagation
+      lastWeights = config.weights;
+
       % Backpropagation
       delta{layerAmount} = finalOutput - correctOutput;
 
@@ -57,7 +61,7 @@ function retval = train (config)
       % Optimizations
       for optimization = config.optimization
         % if (optimization.name = 'ETAMEJORADO' && mod(idxSample, optimization.params.k) == 0)
-        %   % deltaError = lastError < currentError;
+        %   % deltaError = currentError - lastError;
         %   % if ()
         %     % config.eta -=
         %
@@ -75,10 +79,10 @@ function retval = train (config)
   retval = config;
 endfunction
 
-function retval = test (config)
-  for idxSample = 1:rows(config.training')
+function retval = test (config, test)
+  for idxSample = 1:rows(test')
     % Set sample shape correctly
-    sample = config.training{idxSample};
+    sample = test{idxSample};
 
     % Set initial variables
     layer = config.layers(1);
