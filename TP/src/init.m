@@ -1,4 +1,3 @@
-% TODO: Standarize data
 % TODO: Backprop optimizations
 % TODO: Plotting handling
 

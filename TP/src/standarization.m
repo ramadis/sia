@@ -19,7 +19,8 @@ end
 function retval= standarize(data)
   % Normalize input and outputs
   output = normalised_diff([cell2mat(data).output]);
-  input = reshape(normalised_diff([cell2mat(data).input]), [4, 2]); % TODO: dynamicly assign this values
+  setAmount = rows(output');
+  input = reshape(normalised_diff([cell2mat(data).input]), [setAmount, rows([cell2mat(data).input]') / setAmount]);
 
   % Rebuild data structure
   for idx = 1:rows(input)
