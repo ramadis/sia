@@ -16,8 +16,8 @@ function shuffle(array) {
   return array;
 }
 
-function buildSets() {
-  const lines = a.split('\n');
+function buildSets(data) {
+  const lines = data.split('\n');
   lines.shift();
   const nums = lines.map(line => line.split(' ')
                                      .filter(x => x)
