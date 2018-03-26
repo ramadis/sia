@@ -20,9 +20,10 @@ endfunction
 
 function retval = train (config)
   firstEtaPass = 0;
-  errors = [];
+  testErr = errors = [];
 
   for epoch = 1:config.epochs % For each epoch
+    epoch
     for idxSample = 1:rows(config.training') % Iterate through each sample (Lets do it stochasticly, why not)
       % Set sample shape correctly
       sample = config.training{idxSample};
@@ -63,11 +64,11 @@ function retval = train (config)
           if (firstEtaPass == 0)
             % Initialize values
             lastWeights = config.weights;
-            lastError = test(config, {config.training{1:end}}); % Should I check the error with the entire dataset?
+            lastError = test(config, { sample }); % TODO: Should I check the error with the entire dataset?
             currentStep = 0;
             firstEtaPass = 1;
           else
-            currentError = test(config, {config.training{1:end}});
+            currentError = test(config, { sample });
             deltaError = currentError - lastError;
 
             % Add a step if the error is decreasing
@@ -90,6 +91,10 @@ function retval = train (config)
               currentStep = 0; % Reset step if error increased
             endif
 
+            if (config.eta < 0.001)
+              config.eta = 0.1;
+            endif
+
             errors = [errors lastError];
           endif
         endif
@@ -99,10 +104,10 @@ function retval = train (config)
         %endif
       end
     end
-    %errors = [errors test(config, {config.training{1:end}})];
+    errors = [errors test(config, {config.training{1:end}})];
 
   end
-  %savejson('data', errors, 'file3.json');
+  % savejson('data', errors, 'file3.json');
   retval = config;
 endfunction
 
@@ -133,8 +138,8 @@ function retval = test (config, test)
   end
 
   % Print values
-  instances.expectedOutput % Expected output
-  instances.output % Output
+  instances.expectedOutput; % Expected output
+  instances.output; % Output
   retval = config.error(cell2mat(instances.expectedOutput), cell2mat(instances.output)); % Error
 endfunction
 

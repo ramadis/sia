@@ -22,7 +22,7 @@ function retval= standarize(data)
   output = normalised_diff([cell2mat(data).output]);
   setAmount = rows(output');
   rawInput = [cell2mat(data).input];
-  input = reshape(normalised_diff(rawInput), [rows(rawInput') / setAmount, setAmount])'
+  input = reshape(normalised_diff(rawInput), [rows(rawInput') / setAmount, setAmount])';
 
   % Rebuild initial data structure
   out = {};
