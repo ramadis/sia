@@ -18,14 +18,17 @@ end
 
 function retval= standarize(data)
   % Normalize input and outputs
+  % And shape them as a matrix
   output = normalised_diff([cell2mat(data).output]);
   setAmount = rows(output');
-  input = reshape(normalised_diff([cell2mat(data).input]), [setAmount, rows([cell2mat(data).input]') / setAmount]);
+  rawInput = [cell2mat(data).input];
+  input = reshape(normalised_diff(rawInput), [setAmount, rows(rawInput') / setAmount]);
 
-  % Rebuild data structure
+  % Rebuild initial data structure
   for idx = 1:rows(input)
     data = [ data struct('output', [output(idx)], 'input', input(idx, 1:end)) ];
   end
 
+  % Remove repeated values
   retval = data(1:end/2);
 endfunction
