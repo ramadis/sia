@@ -31,5 +31,8 @@ function buildSets() {
 
   // Build final files
   const trainingSetJSON = JSON.stringify({ data: trainingSet  });
-  const testSetJSON JSON.stringify({ data: testSet  });
+  const testSetJSON = JSON.stringify({ data: testSet  });
+
+  console.log(trainingSetJSON);
+  console.log(testSetJSON);
 }
