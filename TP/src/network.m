@@ -30,6 +30,7 @@ function retval = train (config)
       output{1} = input{1};
 
       % Useful variables
+      firstEtaPass = 0;
       correctOutput = sample.output';
       layerAmount = size(config.layers, 2);
 
@@ -42,9 +43,6 @@ function retval = train (config)
       end
       finalOutput = config.layers(1, layerAmount).activation(output{layerAmount});
 
-      % Save weights before backpropagation
-      lastWeights = config.weights;
-
       % Backpropagation
       delta{layerAmount} = finalOutput - correctOutput;
 
@@ -56,18 +54,31 @@ function retval = train (config)
         config.weights{idxLayer} -= (config.eta * (delta{idxLayer + 1} * input{idxLayer + 1}'));
       end
 
-      % TODO: Calculate error
-
       % Optimizations
       for optimization = config.optimization
-        % if (optimization.name = 'ETAMEJORADO' && mod(idxSample, optimization.params.k) == 0)
-        %   % deltaError = currentError - lastError;
-        %   % if ()
-        %     % config.eta -=
-        %
-        %   % end if
-        %   % implement eta mejorado
-        % endif
+        if (optimization.name == 'ETAMEJORADO' && mod(idxSample, optimization.params.k) == 0)
+          % TODO: Check if mod k should be checked only for delta < 0
+          if (firstEtaPass == 0)
+            % Save values before backpropagation
+            lastWeights = config.weights;
+            lastError = test(config, {config.training{1:idxSample}});
+            firstEtaPass == 1;
+          else
+            currentError = test(config, {config.training{1:idxSample}});
+            deltaError = currentError - lastError;
+
+            if (deltaError < 0 )
+              config.eta += optimization.params.alpha;
+              lastWeights = config.weights;
+              lastError = currentError;
+            endif
+
+            if (deltaError > 0)
+              config.eta -= optimization.params.alpha * config.eta;
+              config.weights = lastWeights;
+            endif
+          endif
+        endif
 
         %if (optimization.name = 'MOMENTUM')
           % implement momentum
@@ -106,11 +117,9 @@ function retval = test (config, test)
   end
 
   % Print values
-  instances.expectedOutput % Expected output
-  instances.output % Output
-  config.error(cell2mat(instances.expectedOutput), cell2mat(instances.output)) % Error
-
-  retval = 1;
+  instances.expectedOutput; % Expected output
+  instances.output; % Output
+  retval = config.error(cell2mat(instances.expectedOutput), cell2mat(instances.output)); % Error
 endfunction
 
 function retval = build (config)

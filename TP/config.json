@@ -1,10 +1,10 @@
 {
   "layers": [{ "activation": "ID", "bias": 1, "neurons": 2 }, { "activation": "TANH", "bias": 1, "neurons": 2 }, { "activation": "TANH", "bias": 1, "neurons": 1 }],
-  "optimization": [{ "type": "ETAMEJORADO", "params": { "k": 1 } }, { "type": "NONE", "params": {} }],
-  "training": "data/terrain/training/terrain12.json",
-  "test": "data/terrain/test/terrain12.json",
+  "optimization": [{ "type": "ETAMEJORADO", "params": { "k": 1, "alpha": 0.1, "beta": 0.1 } }],
+  "training": "data/logic/training/and.json",
+  "test": "data/logic/test/and.json",
   "weights": [],
   "error": "MSE",
-  "epochs": 1,
+  "epochs": 10000,
   "eta": 0.1
 }
