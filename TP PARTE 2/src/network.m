@@ -68,7 +68,7 @@ function retval = train (config)
             currentStep = 0;
             firstEtaPass = 1;
           else
-            currentError = test(config, {config.training{1:end}});
+            currentError = test(config, {config.training{1:idxSample}});
             deltaError = currentError - lastError;
 
             % Add a step if the error is decreasing
@@ -82,20 +82,23 @@ function retval = train (config)
               lastWeights = config.weights;
               lastError = currentError;
               currentStep = 0; % Start counting again
+              %errors = [errors lastError];
             endif
 
             % If the error was increased, get back and walk with caution
             if (deltaError > 0)
-              config.eta -= optimization.params.beta * config.eta;
               config.weights = lastWeights;
+              config.eta -= optimization.params.beta * config.eta;
               currentStep = 0; % Reset step if error increased
             endif
 
-            if (config.eta < 0.001)
-              config.eta = 0.1;
-            endif
+            eta = config.eta
+            deltaError
 
-            errors = [errors lastError];
+            % if (config.eta < 0.001)
+            %   config.eta = 0.1;
+            % endif
+
           endif
         endif
 
@@ -107,16 +110,16 @@ function retval = train (config)
           else
             for idxLayer = (layerAmount - 1):-1:1
               deltaWeights = config.weights{idxLayer} - lastWeights{idxLayer};
-              config.weights{idxLayer} -= deltaWeights * optimization.params.alpha;
+              config.weights{idxLayer} += deltaWeights * optimization.params.alpha;
+              lastWeights = config.weights;
             end
           endif
         endif
       end
     end
     errors = [errors test(config, {config.training{1:end}})];
-
   end
-  % savejson('data', errors, 'file3.json');
+  savejson('data', errors, 'file3.json');
   retval = config;
 endfunction
 
