@@ -21,6 +21,7 @@ endfunction
 function retval = train (config)
   firstMomentumPass = firstEtaPass = 0;
   testErr = errors = [];
+  lastError = test(config, {config.training{1:end}});
 
   for epoch = 1:config.epochs % For each epoch
     epoch
@@ -35,7 +36,9 @@ function retval = train (config)
 
       % Useful variables
       correctOutput = sample.output';
+      lastWeights = config.weights;
       layerAmount = size(config.layers, 2);
+      currentStep = 0;
 
       % Forward passing
       for idxLayer = 1:(layerAmount - 1)
@@ -59,49 +62,6 @@ function retval = train (config)
 
       % Optimizations
       for optimization = config.optimization
-        if (strcmp(optimization.name, 'ETAMEJORADO'))
-
-          if (firstEtaPass == 0)
-            % Initialize values
-            lastWeights = config.weights;
-            lastError = test(config, {config.training{1:end}}); % TODO: Should I check the error with the entire dataset?
-            currentStep = 0;
-            firstEtaPass = 1;
-          else
-            currentError = test(config, {config.training{1:idxSample}});
-            deltaError = currentError - lastError;
-
-            % Add a step if the error is decreasing
-            if (deltaError < 0)
-              currentStep += 1;
-            endif
-
-            % If the error was reduced, jump!
-            if (deltaError < 0 && currentStep >= optimization.params.k)
-              config.eta += optimization.params.alpha;
-              lastWeights = config.weights;
-              lastError = currentError;
-              currentStep = 0; % Start counting again
-              %errors = [errors lastError];
-            endif
-
-            % If the error was increased, get back and walk with caution
-            if (deltaError > 0)
-              config.weights = lastWeights;
-              config.eta -= optimization.params.beta * config.eta;
-              currentStep = 0; % Reset step if error increased
-            endif
-
-            eta = config.eta
-            deltaError
-
-            % if (config.eta < 0.001)
-            %   config.eta = 0.1;
-            % endif
-
-          endif
-        endif
-
         if (strcmp(optimization.name, 'MOMENTUM'))
           if (firstMomentumPass == 0)
             % Initialize values
@@ -117,6 +77,41 @@ function retval = train (config)
         endif
       end
     end
+
+    for optimization = config.optimization
+      if (strcmp(optimization.name, 'ETAMEJORADO'))
+        currentError = test(config, {config.training{1:end}});
+        deltaError = currentError - lastError;
+
+        % Add a step if the error is decreasing
+        if (deltaError < 0)
+          currentStep += 1;
+        endif
+
+        % If the error was reduced, jump!
+        if (deltaError < 0 && currentStep >= optimization.params.k)
+          config.eta += optimization.params.alpha;
+          lastWeights = config.weights;
+          lastError = currentError;
+          currentStep = 0; % Start counting again
+          %errors = [errors lastError];
+        endif
+
+        % If the error was increased, get back and walk with caution
+        if (deltaError > 0)
+          config.weights = lastWeights;
+          config.eta -= optimization.params.beta * config.eta;
+          currentStep = 0; % Reset step if error increased
+          epoch -= 1;
+        endif
+
+        % if (config.eta < 0.001)
+        %   config.eta = 0.1;
+        % endif
+
+      endif
+    end
+
     errors = [errors test(config, {config.training{1:end}})];
   end
   savejson('data', errors, 'file3.json');
