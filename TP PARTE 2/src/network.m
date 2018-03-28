@@ -115,7 +115,8 @@ function retval = train (config)
 
     errors = [errors test(config, {config.training{1:end}})];
   end
-  savejson('data', errors, 'file3.json');
+  savejson('data', errors, 'errors.json');
+  savejson('data', config.weights, 'weights.json');
   retval = config;
 endfunction
 
