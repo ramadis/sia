@@ -99,6 +99,7 @@ function retval = train (config)
 
         % If the error was increased, get back and walk with caution
         if (deltaError > 0)
+
           config.weights = lastWeights;
           config.eta -= optimization.params.beta * config.eta;
           currentStep = 0; % Reset step if error increased

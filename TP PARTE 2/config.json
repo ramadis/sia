@@ -1,9 +1,9 @@
 {
   "layers": [{ "activation": "ID", "bias": 1, "neurons": 2 }, { "activation": "TANH", "bias": 1, "neurons": 20 }, { "activation": "TANH", "bias": 1, "neurons": 1 }],
-  "optimization": [{"type": "NONE", "params": { "alpha": 0.9 }}],
+  "optimization": [{"type": "ETAMEJORADO", "params": { "alpha": 0.05, "beta": 0.8, "k": 2 }}],
   "training": "data/terrain/training/terrain12.json",
   "test": "data/terrain/test/terrain12.json",
   "error": "MSE",
   "epochs": 200,
-  "eta": 0.8
+  "eta": 0.1
 }
