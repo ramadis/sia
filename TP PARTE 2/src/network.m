@@ -149,6 +149,8 @@ function retval = test (config, test)
   % Print values
   instances.expectedOutput; % Expected output
   instances.output; % Output
+  diffs = cell2mat(instances.output) - cell2mat(instances.expectedOutput)
+  savejson('data', diffs, 'diffs.json');
   retval = config.error(cell2mat(instances.expectedOutput), cell2mat(instances.output)); % Error
 endfunction
 
