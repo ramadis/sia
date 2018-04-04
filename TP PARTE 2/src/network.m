@@ -25,6 +25,7 @@ function retval = train (config)
 
   for epoch = 1:config.epochs % For each epoch
     epoch
+    currentStep = 0;
     for idxSample = 1:rows(config.training') % Iterate through each sample (Lets do it stochasticly, why not)
       % Set sample shape correctly
       sample = config.training{idxSample};
@@ -38,7 +39,6 @@ function retval = train (config)
       correctOutput = sample.output';
       lastWeights = config.weights;
       layerAmount = size(config.layers, 2);
-      currentStep = 0;
 
       % Forward passing
       for idxLayer = 1:(layerAmount - 1)
@@ -75,42 +75,33 @@ function retval = train (config)
             end
           endif
         endif
-      end
-    end
 
-    for optimization = config.optimization
-      if (strcmp(optimization.name, 'ETAMEJORADO'))
-        currentError = test(config, {config.training{1:end}});
-        deltaError = currentError - lastError;
+        if (strcmp(optimization.name, 'ETAMEJORADO'))
+          currentError = test(config, {config.training{1:end}});
+          deltaError = currentError - lastError;
 
-        % Add a step if the error is decreasing
-        if (deltaError < 0)
-          currentStep += 1;
-        endif
+          % Add a step if the error is decreasing
+          if (deltaError <= 0)
+            currentStep += 1;
+            lastWeights = config.weights;
 
-        % If the error was reduced, jump!
-        if (deltaError < 0 && currentStep >= optimization.params.k)
-          config.eta += optimization.params.alpha;
-          lastWeights = config.weights;
+            % If the error was reduced, jump!
+            if (currentStep >= optimization.params.k)
+              config.eta += optimization.params.alpha;
+              currentStep = 0; % Start counting again
+            endif
+          else
+            currentStep = 0;
+
+            % If the error was increased, get back and walk with caution
+            if (deltaError > 0)
+              config.eta -= optimization.params.beta * config.eta;
+              config.weights = lastWeights;
+            endif
+          endif
           lastError = currentError;
-          currentStep = 0; % Start counting again
-          %errors = [errors lastError];
         endif
-
-        % If the error was increased, get back and walk with caution
-        if (deltaError > 0)
-
-          config.weights = lastWeights;
-          config.eta -= optimization.params.beta * config.eta;
-          currentStep = 0; % Reset step if error increased
-          epoch -= 1;
-        endif
-
-        % if (config.eta < 0.001)
-        %   config.eta = 0.1;
-        % endif
-
-      endif
+      end
     end
 
     errors = [errors test(config, {config.training{1:end}})];
@@ -149,7 +140,7 @@ function retval = test (config, test)
   % Print values
   instances.expectedOutput; % Expected output
   instances.output; % Output
-  diffs = cell2mat(instances.output) - cell2mat(instances.expectedOutput)
+  diffs = cell2mat(instances.output) - cell2mat(instances.expectedOutput);
   savejson('data', diffs, 'diffs.json');
   retval = config.error(cell2mat(instances.expectedOutput), cell2mat(instances.output)); % Error
 endfunction
