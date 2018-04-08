@@ -20,12 +20,12 @@ endfunction
 
 function retval = train (config)
   firstMomentumPass = firstEtaPass = 0;
-  testErr = errors = [];
+  currentStep = 0;
   lastError = test(config, {config.training{1:end}});
+  errors = [lastError];
 
   for epoch = 1:config.epochs % For each epoch
     epoch
-    currentStep = 0;
     for idxSample = 1:rows(config.training') % Iterate through each sample (Lets do it stochasticly, why not)
       % Set sample shape correctly
       sample = config.training{idxSample};
@@ -60,7 +60,7 @@ function retval = train (config)
         config.weights{idxLayer} -= (config.eta * (delta{idxLayer + 1} * input{idxLayer + 1}'));
       end
 
-      % Optimizations
+      % Optimizations for sample
       for optimization = config.optimization
         if (strcmp(optimization.name, 'MOMENTUM'))
           if (firstMomentumPass == 0)
@@ -104,7 +104,37 @@ function retval = train (config)
       end
     end
 
-    errors = [errors test(config, {config.training{1:end}})];
+    % Optimizations for epoch
+    for optimization = config.optimization
+      if (strcmp(optimization.name, 'ETAMEJORADO_EPOCH'))
+        currentError = test(config, {config.training{1:end}});
+        deltaError = currentError - lastError;
+
+        % Add a step if the error is decreasing
+        if (deltaError <= 0)
+          currentStep += 1;
+          lastWeights = config.weights;
+
+          % If the error was reduced, jump!
+          if (currentStep >= optimization.params.k)
+            config.eta += optimization.params.alpha;
+            currentStep = 0; % Start counting again
+          endif
+        else
+          currentStep = 0;
+
+          % If the error was increased, get back and walk with caution
+          if (deltaError > 0)
+            config.eta -= optimization.params.beta * config.eta;
+            config.weights = lastWeights;
+          endif
+        endif
+        lastError = currentError;
+      endif
+    end
+
+    lastError = test(config, {config.training{1:end}});
+    errors = [errors lastError];
   end
   savejson('data', errors, 'errors.json');
   savejson('data', config.weights, 'weights.json');
